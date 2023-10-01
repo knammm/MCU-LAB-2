@@ -51,21 +51,6 @@ void SystemClock_Config(void);
 static void MX_TIM2_Init(void);
 static void MX_GPIO_Init(void);
 /* USER CODE BEGIN PFP */
-int timer0_counter = 0;
-int timer0_flag = 0;
-int TIMER_CYCLE = 10;
-
-void setTimer0(int duration){
-	timer0_counter = duration / TIMER_CYCLE;
-	timer0_flag = 0;
-}
-void timer_run(){
-	if(timer0_counter > 0){
-		timer0_counter--;
-		if(timer0_counter == 0) timer0_flag = 1;
-	}
-}
-
 void display7SEG(int num)
 {
 	/*	HOW TO CONVERT
@@ -87,6 +72,7 @@ const int MAX_LED = 4;
 int index_led = 0;
 int led_buffer[4] = {1, 2, 3, 4};
 int hour = 15 , minute = 8 , second = 50;
+
 void update7SEG(int index){
 	switch(index){
 		case 0:
@@ -119,16 +105,6 @@ void updateClockBuffer(int hour, int minute){
 	led_buffer[1] = hour % 10;
 	led_buffer[2] = minute / 10;
 	led_buffer[3] = minute % 10;
-
-	// For testing...
-	/*update7SEG(0);
-	HAL_Delay(250);
-	update7SEG(1);
-	HAL_Delay(250);
-	update7SEG(2);
-	HAL_Delay(250);
-	update7SEG(3);
-	HAL_Delay(250);*/
 }
 /* USER CODE END PFP */
 
@@ -168,8 +144,10 @@ int main(void)
   MX_GPIO_Init();
   /* USER CODE BEGIN 2 */
   HAL_TIM_Base_Start_IT(&htim2);
-  setTimer0(1000);
+  setTimer1(25);
   setTimer2(100);
+  setTimer3(100);
+  int start = 0;
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -177,21 +155,36 @@ int main(void)
   while (1)
     {
       /* USER CODE END WHILE */
+	  // Starting signal -> update array for the first time
+	  if(start == 0){
+		  updateClockBuffer(hour, minute);
+		  update7SEG(index_led++); // for not being delay 1 segment led
+		  start = 1;
+	  }
+	  // Update LED
+	  if(timer1_flag == 1){
+		  setTimer1(25);
+		  if(index_led > 3) index_led = 0;
+		  update7SEG(index_led++);
+	  }
 	  // Update array
-	  second++;
-	  if (second >= 60) {
-		  second = 0;
-		  minute++;
+	  if(timer3_flag == 1){
+		  setTimer3(100);
+		  // TODO
+		  second++;
+		  if (second >= 60) {
+			  second = 0;
+			  minute++;
+		  }
+		  if(minute >= 60) {
+			  minute = 0;
+			  hour++;
+		  }
+		  if(hour >=24) {
+			  hour = 0;
+		  }
+		  updateClockBuffer(hour, minute);
 	  }
-	  if(minute >= 60) {
-		  minute = 0;
-		  hour++;
-	  }
-	  if(hour >=24) {
-		  hour = 0;
-	  }
-	  updateClockBuffer(hour, minute);
-	  setTimer0(1000);
 	  // Update DOT
 	  if(timer2_flag == 1){
 		  setTimer2(100);
@@ -326,7 +319,6 @@ static void MX_GPIO_Init(void)
 
 /* USER CODE BEGIN 4 */
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
-	timer_run();
 	timerRun();
 }
 /* USER CODE END 4 */
