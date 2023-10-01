@@ -56,10 +56,10 @@ void display7SEG(int num)
 	/*	HOW TO CONVERT
 	 * 	0b00000000 -> 0b0gfedcba
 	 */
-	//if(num == 0) GPIOB->ODR = 0x01; //Displaying 0
+	if(num == 0) GPIOB->ODR = 0x40; //Displaying 0
 	if(num == 1) GPIOB->ODR = 0x79; //Displaying 1
 	if(num == 2) GPIOB->ODR = 0x24; //Displaying 2
-	//if(num == 3) GPIOB->ODR = 0x06; //Displaying 3
+	if(num == 3) GPIOB->ODR = 0x30; //Displaying 3
 	//if(num == 4) GPIOB->ODR = 0x4C; //Displaying 4
 	//if(num == 5) GPIOB->ODR = 0x24; //Displaying 5
 	//if(num == 6) GPIOB->ODR = 0x20; //Displaying 6
@@ -105,27 +105,55 @@ int main(void)
   MX_GPIO_Init();
   /* USER CODE BEGIN 2 */
   HAL_TIM_Base_Start_IT(&htim2);
-  HAL_GPIO_WritePin(EN0_GPIO_Port, EN0_Pin, SET);
-  int state = 0; // state = 0 -> EN0 else EN1
+  int counter = 0;
   setTimer1(50);
+  setTimer2(100);
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
-  {
-    /* USER CODE END WHILE */
-	if(timer1_flag == 1){
-		setTimer1(50);
-		// TODO
-		state = !state;
-		HAL_GPIO_TogglePin(EN0_GPIO_Port, EN0_Pin);
-		HAL_GPIO_TogglePin(EN1_GPIO_Port, EN1_Pin);
-		if(state) display7SEG(1);
-		else display7SEG(2);
-	}
-    /* USER CODE BEGIN 3 */
-  }
+    {
+      /* USER CODE END WHILE */
+	  // Timer 1 -> display 7SEG
+	 if(timer1_flag == 1){
+  		setTimer1(50);
+  		// TODO
+  		++counter;
+  		if(counter > 3) counter = 0;
+  		switch(counter){
+  			case 0:
+  				HAL_GPIO_WritePin(GPIOA, EN0_Pin | EN1_Pin | EN2_Pin | EN3_Pin, SET);
+  				HAL_GPIO_TogglePin(EN0_GPIO_Port, EN0_Pin);
+  				display7SEG(1);
+  				break;
+  			case 1:
+  				HAL_GPIO_WritePin(GPIOA, EN0_Pin | EN1_Pin | EN2_Pin | EN3_Pin, SET);
+  				HAL_GPIO_TogglePin(EN1_GPIO_Port, EN1_Pin);
+  				display7SEG(2);
+  				break;
+  			case 2:
+  				HAL_GPIO_WritePin(GPIOA, EN0_Pin | EN1_Pin | EN2_Pin | EN3_Pin, SET);
+  				HAL_GPIO_TogglePin(EN2_GPIO_Port, EN2_Pin);
+  				display7SEG(3);
+  				break;
+  			case 3:
+  				HAL_GPIO_WritePin(GPIOA, EN0_Pin | EN1_Pin | EN2_Pin | EN3_Pin, SET);
+  				HAL_GPIO_TogglePin(EN3_GPIO_Port, EN3_Pin);
+  				display7SEG(0);
+  				break;
+  			default:
+  				break;
+  		}
+	  }
+  		// Timer 2 -> display DOT
+	  if(timer2_flag == 1){
+  		setTimer2(100);
+  		// TODO
+  		HAL_GPIO_TogglePin(DOT_GPIO_Port, DOT_Pin);
+
+	  }
+  	}
   /* USER CODE END 3 */
 }
 
@@ -223,14 +251,17 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, LED_RED_Pin|EN0_Pin|EN1_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOA, DOT_Pin|LED_RED_Pin|EN0_Pin|EN1_Pin
+                          |EN2_Pin|EN3_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0|GPIO_PIN_1|GPIO_PIN_2|GPIO_PIN_3
                           |GPIO_PIN_4|GPIO_PIN_5|GPIO_PIN_6, GPIO_PIN_RESET);
 
-  /*Configure GPIO pins : LED_RED_Pin EN0_Pin EN1_Pin */
-  GPIO_InitStruct.Pin = LED_RED_Pin|EN0_Pin|EN1_Pin;
+  /*Configure GPIO pins : DOT_Pin LED_RED_Pin EN0_Pin EN1_Pin
+                           EN2_Pin EN3_Pin */
+  GPIO_InitStruct.Pin = DOT_Pin|LED_RED_Pin|EN0_Pin|EN1_Pin
+                          |EN2_Pin|EN3_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
