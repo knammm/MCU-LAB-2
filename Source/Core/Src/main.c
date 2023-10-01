@@ -135,7 +135,8 @@ int main(void)
   MX_GPIO_Init();
   /* USER CODE BEGIN 2 */
   HAL_TIM_Base_Start_IT(&htim2);
-  setTimer1(50);
+  setTimer1(25);
+  setTimer2(100);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -145,12 +146,17 @@ int main(void)
       /* USER CODE END WHILE */
 	  // Timer 1 -> display 7SEG
 	 if(timer1_flag == 1){
-  		setTimer1(50);
+  		setTimer1(25);
   		// TODO
   		++index_led;
   		if(index_led >= 4) index_led = 0;
   		update7SEG(index_led);
 	  }
+	 if(timer2_flag == 1){
+		 setTimer2(100);
+		 // TODO
+		 HAL_GPIO_TogglePin(DOT_GPIO_Port, DOT_Pin);
+	 }
   	}
   /* USER CODE END 3 */
 }
