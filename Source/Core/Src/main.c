@@ -103,15 +103,6 @@ void updateClockBuffer(int hour, int minute){
 	led_buffer[1] = hour % 10;
 	led_buffer[2] = minute / 10;
 	led_buffer[3] = minute % 10;
-
-	update7SEG(0);
-	HAL_Delay(100);
-	update7SEG(1);
-	HAL_Delay(100);
-	update7SEG(2);
-	HAL_Delay(100);
-	update7SEG(3);
-	HAL_Delay(100);
 }
 /* USER CODE END PFP */
 
