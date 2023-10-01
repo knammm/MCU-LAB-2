@@ -51,6 +51,21 @@ void SystemClock_Config(void);
 static void MX_TIM2_Init(void);
 static void MX_GPIO_Init(void);
 /* USER CODE BEGIN PFP */
+int timer0_counter = 0;
+int timer0_flag = 0;
+int TIMER_CYCLE = 10;
+
+void setTimer0(int duration){
+	timer0_counter = duration / TIMER_CYCLE;
+	timer0_flag = 0;
+}
+void timer_run(){
+	if(timer0_counter > 0){
+		timer0_counter--;
+		if(timer0_counter == 0) timer0_flag = 1;
+	}
+}
+
 void display7SEG(int num)
 {
 	/*	HOW TO CONVERT
@@ -70,7 +85,8 @@ void display7SEG(int num)
 
 const int MAX_LED = 4;
 int index_led = 0;
-int led_buffer[4] = {1 , 2 , 3 , 4};
+int led_buffer[4] = {1, 2, 3, 4};
+int hour = 15 , minute = 8 , second = 50;
 void update7SEG(int index){
 	switch(index){
 		case 0:
@@ -103,6 +119,16 @@ void updateClockBuffer(int hour, int minute){
 	led_buffer[1] = hour % 10;
 	led_buffer[2] = minute / 10;
 	led_buffer[3] = minute % 10;
+
+	// For testing...
+	/*update7SEG(0);
+	HAL_Delay(250);
+	update7SEG(1);
+	HAL_Delay(250);
+	update7SEG(2);
+	HAL_Delay(250);
+	update7SEG(3);
+	HAL_Delay(250);*/
 }
 /* USER CODE END PFP */
 
@@ -142,7 +168,8 @@ int main(void)
   MX_GPIO_Init();
   /* USER CODE BEGIN 2 */
   HAL_TIM_Base_Start_IT(&htim2);
-  int hour = 15 , minute = 8 , second = 50;
+  setTimer0(1000);
+  setTimer2(100);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -150,6 +177,7 @@ int main(void)
   while (1)
     {
       /* USER CODE END WHILE */
+	  // Update array
 	  second++;
 	  if (second >= 60) {
 		  second = 0;
@@ -163,7 +191,14 @@ int main(void)
 		  hour = 0;
 	  }
 	  updateClockBuffer(hour, minute);
-	  HAL_Delay(1000);
+	  setTimer0(1000);
+	  // Update DOT
+	  if(timer2_flag == 1){
+		  setTimer2(100);
+		  // TODO
+		  HAL_GPIO_TogglePin(LED_RED_GPIO_Port, LED_RED_Pin);
+		  HAL_GPIO_TogglePin(DOT_GPIO_Port, DOT_Pin);
+	  }
   	}
   /* USER CODE END 3 */
 }
@@ -291,6 +326,7 @@ static void MX_GPIO_Init(void)
 
 /* USER CODE BEGIN 4 */
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
+	timer_run();
 	timerRun();
 }
 /* USER CODE END 4 */
