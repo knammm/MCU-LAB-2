@@ -169,6 +169,19 @@ void displayLEDMatrix(uint8_t input){
 	HAL_GPIO_WritePin(ROW6_GPIO_Port, ROW6_Pin, !(input >> 6 & 0x1));
 	HAL_GPIO_WritePin(ROW7_GPIO_Port, ROW7_Pin, !(input >> 7 & 0x1));
 }
+
+void fixingArray(){
+	// Transmit each element to the right
+	uint8_t temp = matrix_buffer[7];
+	matrix_buffer[7] = matrix_buffer[6];
+	matrix_buffer[6] = matrix_buffer[5];
+	matrix_buffer[5] = matrix_buffer[4];
+	matrix_buffer[4] = matrix_buffer[3];
+	matrix_buffer[3] = matrix_buffer[2];
+	matrix_buffer[2] = matrix_buffer[1];
+	matrix_buffer[1] = matrix_buffer[0];
+	matrix_buffer[0] = temp;
+}
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -207,7 +220,8 @@ int main(void)
   MX_GPIO_Init();
   /* USER CODE BEGIN 2 */
   HAL_TIM_Base_Start_IT(&htim2);
-  setTimer1(100);
+  int counter = 0;
+  setTimer1(10);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -215,9 +229,14 @@ int main(void)
   while (1)
   {
 	if(timer1_flag == 1){
-		setTimer1(100);
+		setTimer1(10);
 		if(index_led_matrix > 7) index_led_matrix = 0;
 		updateLEDMatrix(index_led_matrix++);
+		++counter;
+		if(counter >= 9){
+			counter = 0;
+			fixingArray();
+		}
 	}
     /* USER CODE END WHILE */
 
