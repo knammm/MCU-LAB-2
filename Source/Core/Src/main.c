@@ -229,7 +229,7 @@ int main(void)
   while (1)
   {
 	if(timer1_flag == 1){
-		setTimer1(10);
+		setTimer1(1);
 		if(index_led_matrix > 7) index_led_matrix = 0;
 		updateLEDMatrix(index_led_matrix++);
 		++counter;
