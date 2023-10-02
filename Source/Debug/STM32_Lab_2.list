@@ -513,8 +513,8 @@ int main(void)
  8000468:	681b      	ldr	r3, [r3, #0]
  800046a:	2b01      	cmp	r3, #1
  800046c:	d1fb      	bne.n	8000466 <main+0x26>
-		setTimer1(10);
- 800046e:	200a      	movs	r0, #10
+		setTimer1(1);
+ 800046e:	2001      	movs	r0, #1
  8000470:	f000 f90e 	bl	8000690 <setTimer1>
 		if(index_led_matrix > 7) index_led_matrix = 0;
  8000474:	4b0e      	ldr	r3, [pc, #56]	; (80004b0 <main+0x70>)
