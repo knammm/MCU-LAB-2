@@ -149,14 +149,12 @@ int main(void)
   		setTimer1(25);
   		// TODO
   		++index_led;
-  		if(index_led >= 4) index_led = 0;
+  		if(index_led >= 4){
+  			index_led = 0;
+  			HAL_GPIO_TogglePin(DOT_GPIO_Port, DOT_Pin);
+  		}
   		update7SEG(index_led);
 	  }
-	 if(timer2_flag == 1){
-		 setTimer2(100);
-		 // TODO
-		 HAL_GPIO_TogglePin(DOT_GPIO_Port, DOT_Pin);
-	 }
   	}
   /* USER CODE END 3 */
 }
