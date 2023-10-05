@@ -60,23 +60,39 @@ void display7SEG(int num)
 		HAL_GPIO_WritePin(GPIOB, SEG[0] | SEG[1] | SEG[2] | SEG[3] | SEG[4] | SEG[5], RESET);
 		break;
 	case 1:
+		HAL_GPIO_WritePin(GPIOB, SEG[0] | SEG[1] | SEG[2] | SEG[3] | SEG[4] | SEG[5] | SEG[6], SET);
+		HAL_GPIO_WritePin(GPIOB, SEG[1] | SEG[2], RESET);
 		break;
 	case 2:
+		HAL_GPIO_WritePin(GPIOB, SEG[0] | SEG[1] | SEG[2] | SEG[3] | SEG[4] | SEG[5] | SEG[6], SET);
+		HAL_GPIO_WritePin(GPIOB, SEG[0] | SEG[1] | SEG[3] | SEG[4]| SEG[6], RESET);
 		break;
 	case 3:
+		HAL_GPIO_WritePin(GPIOB, SEG[0] | SEG[1] | SEG[2] | SEG[3] | SEG[4] | SEG[5] | SEG[6], SET);
+		HAL_GPIO_WritePin(GPIOB, SEG[0] | SEG[1] | SEG[2] | SEG[3] | SEG[6], RESET);
 		break;
 	case 4:
+		HAL_GPIO_WritePin(GPIOB, SEG[0] | SEG[1] | SEG[2] | SEG[3] | SEG[4] | SEG[5] | SEG[6], SET);
+		HAL_GPIO_WritePin(GPIOB, SEG[0] | SEG[1] | SEG[2] | SEG[5] | SEG[6], RESET);
 		break;
 	case 5:
+		HAL_GPIO_WritePin(GPIOB, SEG[0] | SEG[1] | SEG[2] | SEG[3] | SEG[4] | SEG[5] | SEG[6], SET);
+		HAL_GPIO_WritePin(GPIOB, SEG[0] | SEG[2] | SEG[3] | SEG[5] | SEG[6], RESET);
 		break;
 	case 6:
+		HAL_GPIO_WritePin(GPIOB, SEG[0] | SEG[1] | SEG[2] | SEG[3] | SEG[4] | SEG[5] | SEG[6], SET);
+		HAL_GPIO_WritePin(GPIOB, SEG[0] | SEG[2] | SEG[3] | SEG[4] | SEG[5] | SEG[6], RESET);
 		break;
 	case 7:
+		HAL_GPIO_WritePin(GPIOB, SEG[0] | SEG[1] | SEG[2] | SEG[3] | SEG[4] | SEG[5] | SEG[6], SET);
+		HAL_GPIO_WritePin(GPIOB, SEG[0] | SEG[1] | SEG[2], RESET);
 		break;
 	case 8:
 		HAL_GPIO_WritePin(GPIOB, SEG[0] | SEG[1] | SEG[2] | SEG[3] | SEG[4] | SEG[5] | SEG[6], RESET);
 		break;
 	case 9:
+		HAL_GPIO_WritePin(GPIOB, SEG[0] | SEG[1] | SEG[2] | SEG[3] | SEG[4] | SEG[5] | SEG[6], SET);
+		HAL_GPIO_WritePin(GPIOB, SEG[0] | SEG[1] | SEG[2] | SEG[3] | SEG[5] | SEG[6], RESET);
 		break;
 	default:
 		break;
@@ -236,14 +252,61 @@ int main(void)
   /* USER CODE BEGIN 2 */
   HAL_TIM_Base_Start_IT(&htim2);
   int counter = 0;
+  int start = 0;
   setTimer1(10);
+  setTimer2(100);
+  setTimer3(25);
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-
+	  if(start == 0){
+		  updateClockBuffer(hour, minute);
+		  update7SEG(index_led++); // for not being delay 1 segment led
+		  start = 1;
+	  }
+	  // Display matrix 8x8
+	  if(timer1_flag == 1){
+		setTimer1(10);
+		// TODO
+		if(index_led_matrix > 7) index_led_matrix = 0;
+		updateLEDMatrix(index_led_matrix++);
+		++counter;
+		if(counter >= 9){
+			counter = 0;
+			fixingArray();
+		}
+	  }
+	  // Update array
+	  if(timer2_flag == 1){
+		  setTimer2(100);
+		  // TODO
+		  second++;
+		  if (second >= 60) {
+			  second = 0;
+			  minute++;
+		  }
+		  if(minute >= 60) {
+			  minute = 0;
+			  hour++;
+		  }
+		  if(hour >=24) {
+			  hour = 0;
+		  }
+		  updateClockBuffer(hour, minute);
+		  // Update DOT
+		  HAL_GPIO_TogglePin(LED_RED_GPIO_Port, LED_RED_Pin);
+		  HAL_GPIO_TogglePin(DOT_GPIO_Port, DOT_Pin);
+	  }
+	  // Update LEDs
+	  if(timer3_flag == 1){
+		  setTimer3(25);
+		  // TODO
+		  if(index_led > 3) index_led = 0;
+		  update7SEG(index_led++);
+	  }
   }
     /* USER CODE END WHILE */
 
