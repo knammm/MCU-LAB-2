@@ -102,7 +102,6 @@ void updateLEDMatrix(int index){
  800017c:	08000271 	.word	0x08000271
  8000180:	08000299 	.word	0x08000299
     switch (index){
-    	// each case corresponds to a column of its value, with RESET means that column is turned on.
         case 0:
         	HAL_GPIO_WritePin(ENM0_GPIO_Port, ENM0_Pin, RESET);
  8000184:	2200      	movs	r2, #0
