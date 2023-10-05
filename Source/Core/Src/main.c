@@ -145,13 +145,8 @@ int main(void)
   			default:
   				break;
   		}
-	  }
-  		// Timer 2 -> display DOT
-	  if(timer2_flag == 1){
-  		setTimer2(100);
-  		// TODO
-  		HAL_GPIO_TogglePin(DOT_GPIO_Port, DOT_Pin);
-
+  		// Update DOT
+  		if(counter % 2 == 0) HAL_GPIO_TogglePin(DOT_GPIO_Port, DOT_Pin);
 	  }
   	}
   /* USER CODE END 3 */
