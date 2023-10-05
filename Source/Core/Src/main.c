@@ -136,7 +136,6 @@ int main(void)
   /* USER CODE BEGIN 2 */
   HAL_TIM_Base_Start_IT(&htim2);
   setTimer1(25);
-  setTimer2(100);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -148,12 +147,11 @@ int main(void)
 	 if(timer1_flag == 1){
   		setTimer1(25);
   		// TODO
-  		++index_led;
   		if(index_led >= 4){
   			index_led = 0;
   			HAL_GPIO_TogglePin(DOT_GPIO_Port, DOT_Pin);
   		}
-  		update7SEG(index_led);
+  		update7SEG(index_led++);
 	  }
   	}
   /* USER CODE END 3 */
