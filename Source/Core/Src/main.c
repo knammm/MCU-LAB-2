@@ -207,7 +207,7 @@ int main(void)
   MX_GPIO_Init();
   /* USER CODE BEGIN 2 */
   HAL_TIM_Base_Start_IT(&htim2);
-  setTimer1(100);
+  setTimer1(10);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -215,7 +215,7 @@ int main(void)
   while (1)
   {
 	if(timer1_flag == 1){
-		setTimer1(100);
+		setTimer1(10);
 		if(index_led_matrix > 7) index_led_matrix = 0;
 		updateLEDMatrix(index_led_matrix++);
 	}

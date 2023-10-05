@@ -438,8 +438,8 @@ int main(void)
   HAL_TIM_Base_Start_IT(&htim2);
  80003fc:	480e      	ldr	r0, [pc, #56]	; (8000438 <main+0x50>)
  80003fe:	f001 f947 	bl	8001690 <HAL_TIM_Base_Start_IT>
-  setTimer1(100);
- 8000402:	2064      	movs	r0, #100	; 0x64
+  setTimer1(10);
+ 8000402:	200a      	movs	r0, #10
  8000404:	f000 f90c 	bl	8000620 <setTimer1>
 
   /* Infinite loop */
@@ -451,8 +451,8 @@ int main(void)
  800040a:	681b      	ldr	r3, [r3, #0]
  800040c:	2b01      	cmp	r3, #1
  800040e:	d1fb      	bne.n	8000408 <main+0x20>
-		setTimer1(100);
- 8000410:	2064      	movs	r0, #100	; 0x64
+		setTimer1(10);
+ 8000410:	200a      	movs	r0, #10
  8000412:	f000 f905 	bl	8000620 <setTimer1>
 		if(index_led_matrix > 7) index_led_matrix = 0;
  8000416:	4b0a      	ldr	r3, [pc, #40]	; (8000440 <main+0x58>)
