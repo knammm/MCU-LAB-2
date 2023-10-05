@@ -113,7 +113,6 @@ uint8_t matrix_buffer[8] = {0x00, 0xFC, 0xFE, 0x33, 0x33, 0xfE, 0xFC, 0x00};
 
 void updateLEDMatrix(int index){
     switch (index){
-    	// each case corresponds to a column of its value, with RESET means that column is turned on.
         case 0:
         	HAL_GPIO_WritePin(ENM0_GPIO_Port, ENM0_Pin, RESET);
         	HAL_GPIO_WritePin(GPIOA, ENM1_Pin | ENM2_Pin | ENM3_Pin | ENM4_Pin | ENM5_Pin | ENM6_Pin | ENM7_Pin, SET);
