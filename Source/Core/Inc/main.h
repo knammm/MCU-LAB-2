@@ -70,6 +70,12 @@ void Error_Handler(void);
 #define EN0_GPIO_Port GPIOA
 #define EN1_Pin GPIO_PIN_7
 #define EN1_GPIO_Port GPIOA
+#define SEG7_0_Pin GPIO_PIN_0
+#define SEG7_0_GPIO_Port GPIOB
+#define SEG7_1_Pin GPIO_PIN_1
+#define SEG7_1_GPIO_Port GPIOB
+#define SEG7_2_Pin GPIO_PIN_2
+#define SEG7_2_GPIO_Port GPIOB
 #define ROW2_Pin GPIO_PIN_10
 #define ROW2_GPIO_Port GPIOB
 #define ROW3_Pin GPIO_PIN_11
@@ -98,6 +104,14 @@ void Error_Handler(void);
 #define ENM6_GPIO_Port GPIOA
 #define ENM7_Pin GPIO_PIN_15
 #define ENM7_GPIO_Port GPIOA
+#define SEG7_3_Pin GPIO_PIN_3
+#define SEG7_3_GPIO_Port GPIOB
+#define SEG7_4_Pin GPIO_PIN_4
+#define SEG7_4_GPIO_Port GPIOB
+#define SEG7_5_Pin GPIO_PIN_5
+#define SEG7_5_GPIO_Port GPIOB
+#define SEG7_6_Pin GPIO_PIN_6
+#define SEG7_6_GPIO_Port GPIOB
 #define ROW0_Pin GPIO_PIN_8
 #define ROW0_GPIO_Port GPIOB
 #define ROW1_Pin GPIO_PIN_9
