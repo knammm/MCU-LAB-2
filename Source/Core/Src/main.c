@@ -140,7 +140,7 @@ void updateClockBuffer(int hour, int minute){
 
 const int MAX_LED_MATRIX = 8;
 int index_led_matrix = 0;
-uint8_t matrix_buffer[8] = {0x00, 0xFC, 0xFE, 0x33, 0x33, 0xfE, 0xFC, 0x00};
+uint8_t matrix_buffer[8] = {0x00, 0xFC, 0xFE, 0x33, 0x33, 0xFE, 0xFC, 0x00};
 
 void updateLEDMatrix(int index){
     switch (index){
@@ -253,7 +253,7 @@ int main(void)
   HAL_TIM_Base_Start_IT(&htim2);
   int counter = 0;
   int start = 0;
-  setTimer1(10);
+  setTimer1(5);
   setTimer2(100);
   setTimer3(25);
   /* USER CODE END 2 */
@@ -269,7 +269,7 @@ int main(void)
 	  }
 	  // Display matrix 8x8
 	  if(timer1_flag == 1){
-		setTimer1(10);
+		setTimer1(5);
 		// TODO
 		if(index_led_matrix > 7) index_led_matrix = 0;
 		updateLEDMatrix(index_led_matrix++);
